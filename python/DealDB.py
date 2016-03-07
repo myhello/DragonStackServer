@@ -1,7 +1,7 @@
 #-*- encoding:UTF-8 -*-
 
 import MySQLdb
-
+import sys
 class DB_doing():
     def __init__(self):
         self.conn = MySQLdb.connect(

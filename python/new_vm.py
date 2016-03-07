@@ -28,7 +28,7 @@ def find_all_xenservers(region):
 def find_serverid(region,serverip):
 	db = DealDB.DB_doing()
 	serverid = db.getServerId(region,serverip)
-    return serverid
+        return serverid
 
 #判断某个xenserver是否剩余了满足创建虚拟机的配置量
 def canCreateVm(xenserver,cpu_cores,mem_size,new_disk,os_type):
