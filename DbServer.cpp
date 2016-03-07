@@ -21,3 +21,5 @@ void DbServer::db_connect(){
         printf("DB connect failed...\n");
     }
 }
+
+//其他数据库操作函数
