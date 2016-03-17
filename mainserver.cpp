@@ -20,6 +20,8 @@ pthread_t taskthread;
 
 TaskQueue taskQueue;  //用于处理客户端发来的任务队列
 
+extern CMutex g_tcpLock;
+
 void* ProcessRequest(void*)
 {
   VmServer *vmserver = VmServer::Instantialize();
@@ -38,9 +40,14 @@ void* ProcessRequest(void*)
     sleep(5);
   	if (!taskQueue.isEmpty())
   	{
+      
+      CMyLock lock(g_tcpLock);
+
       struct Task* task1 ;
   		taskQueue.dequeue(task1);
   		printf("%d\n",task1->t_id);
+
+      lock.~CMyLock();
 
   		//判断task->t_id，执行不同的虚拟机服务
   		switch( VmService(task1->t_id) ){
