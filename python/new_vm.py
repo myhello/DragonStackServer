@@ -1,4 +1,6 @@
 #-*- encoding:UTF-8 -*-
+#!/usr/bin/python
+
 import os
 import xen
 import socket
