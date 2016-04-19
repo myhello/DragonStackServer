@@ -36,7 +36,7 @@ void* ProcessRequest(void*)
   };
 
   while(true){
-	  //printf("%d\n",taskQueue.getQsize());
+	 // printf("%d\n",taskQueue.getQsize());
     sleep(5);
   	if (!taskQueue.isEmpty())
   	{
@@ -66,7 +66,7 @@ void* ProcessRequest(void*)
 		    default:
 		      break;
   		}
-  		//printf("%s\n",task1->t_name);
+  		printf("%s\n",task1->t_data);
 
 	  	free(task1);
 	  }

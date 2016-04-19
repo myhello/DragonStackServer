@@ -15,5 +15,5 @@ void NAT(char* buffer,DbServer *dbserver);
 
 char* getdport(const char* confpath);
 
-
+#define BUF_SIZE 1024
 #endif

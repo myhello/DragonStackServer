@@ -34,7 +34,7 @@ void VmServer::createVm(char *data)
     if (pid==0)
     {
         /* code */
-        execlp("python/new_vm.py","python/new_vm.py",data);
+        execlp("python/new_vm.py","python/new_vm.py",data,NULL);
         perror("python/new_vm.py");
         exit(errno);
     }else{
@@ -46,7 +46,7 @@ void VmServer::createVm(char *data)
 //NAT端口转发
 void VmServer::natServer(char *data,DbServer* dbServer)
 {
-    //NAT(data,dbServer);
+   NAT(data,dbServer);
 }
 
 //回收虚拟机
@@ -60,7 +60,7 @@ void VmServer::recyVm(char *data)
     if (pid==0)
     {
         /* code */
-        execlp("python/Recy_vm.py","python/Recy_vm.py",data);
+        execlp("python/Recy_vm.py","python/Recy_vm.py",data,NULL);
         perror("python/Recy_vm.py");
         exit(errno);
     }else{
@@ -80,7 +80,7 @@ void VmServer::updateVm(char *data)
     if (pid==0)
     {
         /* code */
-        execlp("python/update_vm.py","python/update_vm.py",data);
+        execlp("python/update_vm.py","python/update_vm.py",data,NULL);
         perror("python/update_vm.py");
         exit(errno);
     }else{
