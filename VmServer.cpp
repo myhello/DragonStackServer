@@ -46,7 +46,7 @@ void VmServer::createVm(char *data)
 //NAT端口转发
 void VmServer::natServer(char *data,DbServer* dbServer)
 {
-    NAT(data,dbserver);
+    //NAT(data,dbServer);
 }
 
 //回收虚拟机

@@ -11,10 +11,10 @@ TaskQueue.o:TaskQueue.cpp TaskQueue.h
 	g++ -c TaskQueue.cpp
 
 TcpServer.o:TcpServer.cpp TcpServer.h TcpEventServer.h VmServer.h Lock.h TaskQueue.h
-	g++ -c TcpServer.cpp TcpEventServer.cpp Lock.cpp 
+	g++ -c TcpServer.cpp TcpEventServer.cpp Lock.cpp -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient 
 
-VmServer.o:VmServer.cpp VmServer.h
-	g++ -c VmServer.cpp
+VmServer.o:VmServer.cpp VmServer.h 
+	g++ -c VmServer.cpp  -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient
 
 mainserver.o:mainserver.cpp DbServer.h TcpServer.h VmServer.h
 	g++ -c mainserver.cpp -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient

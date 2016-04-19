@@ -1,6 +1,7 @@
 #ifndef _VMSERVER_H
 #define _VMSERVER_H
 
+#include "NAT.h"
 #include "DbServer.h"
 #include <unistd.h>
 #include <pthread.h>

@@ -27,7 +27,7 @@ void TcpServer::ReadEvent(Conn *conn)
   result=strtok(buffer,delims);
   if (result!=NULL)
   {
-     task->t_data = atoi(result);
+     task->t_id = atoi(result);
      result = strtok(NULL,delims);
      strcpy(task->t_data,result);
   }
