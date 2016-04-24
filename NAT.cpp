@@ -44,6 +44,9 @@ void NAT(char* buffer,DbServer *dbserver)
     cout<<dport_str<<"------------------"<<endl;
 
 
+    //将转发记录写入数据库
+    dbserver->addNat(nat_id,dport_str);
+
 
     //将转发记录写入到数据库
 

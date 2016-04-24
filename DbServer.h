@@ -3,6 +3,7 @@
 
 #include <mysql.h>
 #include <stdio.h>
+#include <string.h>
 
 class DbServer
 {
@@ -12,6 +13,12 @@ public:
 	
 	//连接数据库服务器
 	void db_connect();
+	
+	int executesql(const char * sql) ;
+
+	void addNat(char* nat_id,char *dport_str);
+
+	void print_mysql_error(const char *msg);
 
 /* data */
 private:

@@ -22,4 +22,33 @@ void DbServer::db_connect(){
     }
 }
 
+//执行sql函数
+int DbServer::executesql(const char * sql) {
+    /*query the database according the sql*/
+    if (mysql_real_query(&conn, sql, strlen(sql))) // 如果失败
+        return -1; // 表示失败
+
+    return 0; // 成功执行
+}
+
+//执行sql失败
+void DbServer::print_mysql_error(const char *msg) { // 打印最后一次错误
+    if (msg)
+        printf("%s: %s\n", msg, mysql_error(&conn));
+    else
+        puts(mysql_error(&conn));
+}
+
+//插入NAT记录
+void DbServer::addNat(char* nat_id,char *dport_str){
+
+    char sql[300];
+    sprintf(sql,"update `other_nat` set dport=%s and state=1 where id=%s",dport_str,nat_id);    
+    if(executesql(sql))
+        print_mysql_error(NULL);
+    else
+        printf("insert other_nat success! ");
+}
+
+
 //其他数据库操作函数

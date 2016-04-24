@@ -23,4 +23,4 @@ mainserver.o:mainserver.cpp DbServer.h TcpServer.h VmServer.h
 	g++ -c mainserver.cpp -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient
 
 clean:
-	rm DbServer.o VmServer.o TcpEventServer.o TcpServer.o mainserver.o Lock.o TaskQueue.o server
+	rm NAT.o DbServer.o VmServer.o TcpEventServer.o TcpServer.o mainserver.o Lock.o TaskQueue.o server
