@@ -14,7 +14,7 @@ TaskQueue.o:TaskQueue.cpp TaskQueue.h
 	g++ -c TaskQueue.cpp
 
 TcpServer.o:TcpServer.cpp TcpServer.h TcpEventServer.h VmServer.h Lock.h TaskQueue.h
-	g++ -c TcpServer.cpp TcpEventServer.cpp Lock.cpp -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient 
+	g++ -c TcpServer.cpp TcpEventServer.cpp Lock.cpp -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient -levent 
 
 VmServer.o:VmServer.cpp VmServer.h NAT.h 
 	g++ -c VmServer.cpp  NAT.cpp  -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient
