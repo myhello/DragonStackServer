@@ -5,6 +5,8 @@ import socket,threading
 import time,Queue
 from xen import Xen
 import MySQLdb
+import os,sys
+import log
 
 class DB_doing():
     def __init__(self):
@@ -61,8 +63,8 @@ def doTask(task):
         xen.update_disk(vm_info[1],str(new_disk))
         print "add disk success!"    
     except Exception, e:
+	log.MyLog(str(e))	
         print str(e)
-        raise e
     
     try:
         xen.vm_update(vm_info[1],fields)

@@ -6,11 +6,13 @@ import time,Queue
 from xen import Xen
 import MySQLdb
 import os
+import log
+import sys
 
 class DB_doing():
     def __init__(self):
         self.conn = MySQLdb.connect(
-        host = '222.25.140.1',
+        host = 'localhost',
         port = 3306,
         user='root',
         passwd='xidian320',
@@ -48,7 +50,7 @@ def doTask(task):
         db.delete_vm(vm_info[2])     #vm uuid
 
         delete_nat = 'sudo iptables -t nat -D PREROUTING -i eth1 -p tcp --dport %s -j DNAT --to-destination %s:%s' % (vm_info[5],vm_info[3],vm_info[4])  
-        print delete_nat
+        #print delete_nat
         os.system(delete_nat)
         os.system("sudo service iptables save")
 
@@ -57,8 +59,7 @@ def doTask(task):
         print "delete vm success!"    
     except Exception, e:
         print str(e)
-        raise e
-        
+	log.MyLog(str(e))
  
 def main():
     task = sys.argv[1]     

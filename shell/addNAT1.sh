@@ -57,7 +57,7 @@ else
         fi
     done
     sudo service iptables save
-    eval echo $i > shell/dport.conf
+    eval echo $i > dport.conf
     echo "NAT port $i success!"
 fi
 

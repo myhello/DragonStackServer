@@ -196,7 +196,7 @@ def new_vm(region,os_type,cpu_cores,mem_size,new_disk,password,vm_id,nid,user_id
 
 	dport = NAT(xenserver.read_ip_address(vm_ref),lport)
  
-    #目前windows的改密码程序不能退出啊	
+    #改密码
     	updateVmPassword(os_type,xenserver.read_ip_address(vm_ref),password)
 	
 	webProxy(vm_ip);
