@@ -2,6 +2,7 @@
 
 char* getdport(const char* confpath)
 {
+	cout<<confpath<<endl;
     FILE *fp;
     char *a = new char[6];    
     if((fp=fopen(confpath,"rt"))==NULL)
@@ -10,6 +11,7 @@ char* getdport(const char* confpath)
         return a;
     }
     fgets(a,6,fp);
+	a[5] = '\0';
     return a;
 }
 
@@ -35,19 +37,17 @@ void NAT(char* buffer,DbServer *dbserver)
         temp = strtok(NULL,d);
     }
     char *nat = new char[50];
-    sprintf(nat,"shell/addNAT1.sh %s %s",ip,lport);
+    sprintf(nat,"./addNAT1.sh %s %s",ip,lport);
+    printf("%s\n",nat);
     system(nat);
     //读取配置文件中的dport信息，准备发送
     char *dport_str = new char[BUF_SIZE];
-    dport_str = getdport("shell/dport.conf");
-    //sprintf(dport_str,"%d",dport);
-    cout<<dport_str<<"------------------"<<endl;
+    dport_str = getdport("./dport.conf");
+    cout<<"--------------"<<dport_str<<"------------------"<<endl;
 
 
     //将转发记录写入数据库
+    dbserver->checkConn();
     dbserver->addNat(nat_id,dport_str);
-
-
-    //将转发记录写入到数据库
 
 }

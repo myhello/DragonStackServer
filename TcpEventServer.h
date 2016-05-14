@@ -58,7 +58,11 @@ public:
   //从读缓冲区中取出len个字节的数据，存入buffer中，若不够，则读出所有数据
   //返回读出数据的字节数
   int GetReadBuffer(char *buffer, int len)
-  { return evbuffer_remove(m_ReadBuf, buffer, len); }
+  {
+    int l = evbuffer_remove(m_ReadBuf, buffer, len); 
+    //printf("%d\n",l);
+    return l;
+  }
 
   //从读缓冲区中复制出len个字节的数据，存入buffer中，若不够，则复制出所有数据
   //返回复制出数据的字节数

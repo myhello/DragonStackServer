@@ -7,7 +7,7 @@ using namespace std;
 struct Task{
 	/* data */
 	int t_id;
-	char t_data[50];
+	char t_data[100];
 };
 
 

@@ -1,0 +1,8 @@
+2016-05-13 20:58:04,853 - log.py:33 - server - can find xenserver to create vm!!
+2016-05-13 21:02:53,718 - log.py:33 - server - can not find xenserver to create vm!!
+2016-05-13 21:19:46,230 - log.py:33 - server - can not find xenserver to create vm!!
+2016-05-13 21:20:23,750 - log.py:33 - server - can not find xenserver to create vm!!
+2016-05-13 21:29:18,539 - log.py:33 - server - ['SR_BACKEND_FAILURE_79', '', 'VDI Invalid size [opterr=shrinking not allowed]', '']
+2016-05-13 21:36:38,062 - log.py:33 - server - ['SR_BACKEND_FAILURE_79', '', 'VDI Invalid size [opterr=shrinking not allowed]', '']
+2016-05-13 23:35:47,902 - log.py:33 - server - (2003, "Can't connect to MySQL server on '222.25.140.1' (110)")
+2016-05-14 11:25:00,186 - log.py:33 - server - can not find xenserver to create vm!!

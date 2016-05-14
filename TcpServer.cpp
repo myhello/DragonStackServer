@@ -8,7 +8,7 @@
 
 CMutex g_tcpLock;
 
-char buffer[50];      //接受数据缓冲区
+char buffer[100];      //接受数据缓冲区
 
 extern TaskQueue taskQueue;  //用于处理客户端发来的任务队列
 
@@ -16,9 +16,12 @@ void TcpServer::ReadEvent(Conn *conn)
 {
   CMyLock lock(g_tcpLock);
   //char buffer[6];
-  memset(buffer, 0, strlen(buffer));
-  conn->GetReadBuffer(buffer, 50);
+  memset(buffer, 0,100); 
+  int len = conn->GetReadBufferLen();
+  //cout<<len<<endl;  
 
+  conn->GetReadBuffer(buffer, len);
+  cout<<buffer<<endl;
   struct Task* task = (struct Task*)malloc(sizeof(struct Task));
 
   //解析客户端发来的数据包"1#ab|cd|ef"
@@ -34,6 +37,7 @@ void TcpServer::ReadEvent(Conn *conn)
 
   taskQueue.enqueue(task);
 
+  //cout<<conn->GetReadBufferLen()<<endl;
 }
 
 void TcpServer::WriteEvent(Conn *conn)

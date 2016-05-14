@@ -21,26 +21,27 @@ VmServer* VmServer::Instantialize()   {
     return pInstance;
 }
 
-//创建进程去调用python
+//创建进程去调用python的xenserver接口
 
 //创建虚拟机
 void VmServer::createVm(char *data)
 {
-    //char proxy[100];
-    //sprintf(proxy,"sudo python python/new_vm.py %s",data);
-    //system(proxy);
-    pid_t pid;
+    char proxy[100];
+    sprintf(proxy,"python new_vm.py \"%s\"",data);
+    system(proxy);
+    //pid_t pid;
+    //cout<<data<<endl;
+	/*
     pid = fork();
     if (pid==0)
     {
-        /* code */
         execlp("python/new_vm.py","python/new_vm.py",data,NULL);
         perror("python/new_vm.py");
         exit(errno);
     }else{
         pid = waitpid(pid,NULL,0);
         printf("child process return %d\n",pid);
-    }
+    }*/
 }
 
 //NAT端口转发
@@ -52,39 +53,41 @@ void VmServer::natServer(char *data,DbServer* dbServer)
 //回收虚拟机
 void VmServer::recyVm(char *data)
 {
-    //char proxy[100];
-    //sprintf(proxy,"sudo python python/Recy_vm.py %s",data);
-    //system(proxy);
-    pid_t pid;
+    //cout<<data<<endl;
+    char proxy[100];
+    sprintf(proxy,"python Recy_vm.py \"%s\"",data);
+    system(proxy);
+    //pid_t pid;
+    /*
     pid = fork();
     if (pid==0)
     {
-        /* code */
         execlp("python/Recy_vm.py","python/Recy_vm.py",data,NULL);
         perror("python/Recy_vm.py");
         exit(errno);
     }else{
         pid = waitpid(pid,NULL,0);
         printf("child process return %d\n",pid);
-    }
+    }*/
 }
 
 //更新虚拟机配置
 void VmServer::updateVm(char *data)
 {
-    //char proxy[100];
-    //sprintf(proxy,"sudo python python/update_vm.py %s",data);
-    //system(proxy);
-    pid_t pid;
+    //cout<<data<<endl;
+    char proxy[100];
+    sprintf(proxy,"python update_vm.py \"%s\"",data);
+    system(proxy);
+    //pid_t pid;
+    /*
     pid = fork();
     if (pid==0)
     {
-        /* code */
         execlp("python/update_vm.py","python/update_vm.py",data,NULL);
         perror("python/update_vm.py");
         exit(errno);
     }else{
         pid = waitpid(pid,NULL,0);
         printf("child process return %d\n",pid);
-    }
+    }*/
 }

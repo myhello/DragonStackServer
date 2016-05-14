@@ -2,6 +2,7 @@
 #define _DBSERVER_H
 
 #include <mysql.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -19,6 +20,8 @@ public:
 	void addNat(char* nat_id,char *dport_str);
 
 	void print_mysql_error(const char *msg);
+	
+	void checkConn();
 
 /* data */
 private:

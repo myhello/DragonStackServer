@@ -10,8 +10,8 @@
 #include <iostream>
 using namespace std;
 
-#define  DB_HOST "192.168.0.254"
-#define  SERVER_POST 2111
+#define  DB_HOST "localhost"
+#define  SERVER_POST 10000 
 #define  DB_USER "root"
 #define  DB_PASSWORD "xidian320"
 #define  DATABASE "temp"
@@ -27,7 +27,7 @@ void* ProcessRequest(void*)
   VmServer *vmserver = VmServer::Instantialize();
 
   DbServer dbserver(DB_HOST,DB_USER,DB_PASSWORD,DATABASE);
-
+  
   enum VmService{
     CREATE_VM,
     RYCLE_VM,
@@ -44,8 +44,8 @@ void* ProcessRequest(void*)
       CMyLock lock(g_tcpLock);
 
       struct Task* task1 ;
-  		taskQueue.dequeue(task1);
-  		printf("%d\n",task1->t_id);
+  	  taskQueue.dequeue(task1);
+  	  printf("%d\n",task1->t_id);
 
       lock.~CMyLock();
 
@@ -54,19 +54,19 @@ void* ProcessRequest(void*)
 		    case CREATE_VM:
 			    vmserver->createVm(task1->t_data);
 			    break;
-			  case RYCLE_VM:
+			case RYCLE_VM:
 			    vmserver->recyVm(task1->t_data);
 			    break;
-			  case UPDATE_VM:
+			case UPDATE_VM:
 			    vmserver->updateVm(task1->t_data);
 			    break;
 		    case NAT_VM:
-		      vmserver->natServer(task1->t_data,&dbserver);
-		      break;
+		        vmserver->natServer(task1->t_data,&dbserver);
+		        break;
 		    default:
-		      break;
+		        break;
   		}
-  		printf("%s\n",task1->t_data);
+  		//printf("%s\n",task1->t_data);
 
 	  	free(task1);
 	  }
