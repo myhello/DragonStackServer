@@ -100,6 +100,7 @@ def updateVmPassword(os_type,vm_ip,password):
 		os.system(shell)
 	if os_type==6:
 		shell = "/usr/tcl/bin/expect centos_password.exp %s %s %s %s" % (centos_user,oldpassword,vm_ip,password)
+		os.system(shell)
 
 def sendMail(user_id,lport,gw_ip,dport,password):
 	db = DealDB.DB_doing()
