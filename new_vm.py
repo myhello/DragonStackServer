@@ -95,12 +95,14 @@ def updateVmPassword(os_type,vm_ip,password):
 	if os_type==1 or os_type==4 :
 		shell = "/usr/tcl/bin/expect linux_password.exp %s %s %s %s" % (ubunbu_user,oldpassword,vm_ip,password)
 		os.system(shell)
+		os.system("rm ../.ssh/known_hosts")
 	if os_type==2 or os_type==3 :
 		shell = "/usr/tcl/bin/expect windows_password.exp %s %s %s %s" % (windows_user,oldpassword,vm_ip,password)
 		os.system(shell)
 	if os_type==6:
 		shell = "/usr/tcl/bin/expect centos_password.exp %s %s %s %s" % (centos_user,oldpassword,vm_ip,password)
 		os.system(shell)
+		os.system("rm ../.ssh/known_hosts")
 
 def sendMail(user_id,lport,gw_ip,dport,password):
 	db = DealDB.DB_doing()
