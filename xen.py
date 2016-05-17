@@ -195,7 +195,7 @@ class Xen():
 		vm_uuid = self.get_uuid(vm)
 		print "  New VM has name: "+vm_name
 		print "Creating VIF"
-		vif = { 'device': '2',
+		vif = { 'device': '0',
 		        'network': network,
 		        'VM': vm,
 		        'MAC': "",
