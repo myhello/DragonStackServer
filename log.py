@@ -18,7 +18,7 @@ class MyLog(object):
         '''
         
         print "server.log"
-        LOG_FILE = '../Log/server.log'
+        LOG_FILE = 'Log/server.log'
 
         handler = logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes = 1024*1024, backupCount = 5)  
         fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
