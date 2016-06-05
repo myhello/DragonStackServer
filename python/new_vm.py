@@ -201,6 +201,7 @@ def new_vm(region,os_type,cpu_cores,mem_size,new_disk,password,vm_id,nid,user_id
  
     #改密码
     	updateVmPassword(os_type,xenserver.read_ip_address(vm_ref),password)
+
 	
 	webProxy(vm_ip);
     ###result = dataToJson(xenserver.read_ip_address(vm_ref),vm_uuid,vm_lable,lport,dport,serverid)

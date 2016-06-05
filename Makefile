@@ -1,5 +1,5 @@
-server:NAT.o DbServer.o VmServer.o TcpEventServer.o TcpServer.o mainserver.o Lock.o TaskQueue.o
-	g++ -g -o server NAT.o mainserver.o DbServer.o TcpEventServer.o TcpServer.o VmServer.o Lock.o TaskQueue.o -lpthread -levent -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient 
+server:NAT.o DbServer.o VmServer.o TcpEventServer.o TcpServer.o mainserver.o config.o Lock.o TaskQueue.o
+	g++ -g -o server NAT.o mainserver.o DbServer.o TcpEventServer.o TcpServer.o config.o VmServer.o Lock.o TaskQueue.o -lpthread -levent -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient 
 
 DbServer.o:DbServer.cpp DbServer.h
 	g++ -c DbServer.cpp -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient
@@ -19,8 +19,8 @@ TcpServer.o:TcpServer.cpp TcpServer.h TcpEventServer.h VmServer.h Lock.h TaskQue
 VmServer.o:VmServer.cpp VmServer.h NAT.h 
 	g++ -c VmServer.cpp  NAT.cpp  -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient
 
-mainserver.o:mainserver.cpp DbServer.h TcpServer.h VmServer.h
-	g++ -c mainserver.cpp -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient
+mainserver.o:mainserver.cpp DbServer.h TcpServer.h VmServer.h config.h config.cpp
+	g++ -c mainserver.cpp config.cpp -I/usr/include/mysql -L/usr/lib64/mysql -lmysqlclient
 
 clean:
-	rm NAT.o DbServer.o VmServer.o TcpEventServer.o TcpServer.o mainserver.o Lock.o TaskQueue.o server
+	rm NAT.o DbServer.o VmServer.o TcpEventServer.o config.o TcpServer.o mainserver.o Lock.o TaskQueue.o server

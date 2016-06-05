@@ -91,3 +91,19 @@ void VmServer::updateVm(char *data)
         printf("child process return %d\n",pid);
     }*/
 }
+
+//关闭锁定虚拟机
+void VmServer::LockVM(char *data)
+{
+	char proxy[100];
+	sprintf(proxy,"python shutdown.py \"%s\"",data);
+	system(proxy);
+}
+
+//解锁开启虚拟机
+void VmServer::UnlockVM(char *data)
+{
+	char proxy[100];
+	sprintf(proxy,"python startup.py \"%s\"",data);
+	system(proxy);
+}

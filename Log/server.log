@@ -6,3 +6,4 @@
 2016-05-13 21:36:38,062 - log.py:33 - server - ['SR_BACKEND_FAILURE_79', '', 'VDI Invalid size [opterr=shrinking not allowed]', '']
 2016-05-13 23:35:47,902 - log.py:33 - server - (2003, "Can't connect to MySQL server on '222.25.140.1' (110)")
 2016-05-14 11:25:00,186 - log.py:33 - server - can not find xenserver to create vm!!
+2016-05-15 18:08:08,695 - log.py:33 - server - ['DEVICE_ALREADY_EXISTS', '2']

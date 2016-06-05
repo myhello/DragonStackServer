@@ -52,6 +52,12 @@ public:
 	//更新虚拟机配置
 	void updateVm(char *data);
 
+	//关闭锁定虚拟机
+	void LockVM(char *data);
+	
+	//解锁开启虚拟机
+	void UnlockVM(char *data);
+
 	~VmServer();
 
 	/* data */

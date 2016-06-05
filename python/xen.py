@@ -396,5 +396,5 @@ if __name__ == '__main__':
         uuid = '04b17d39-7df1-8df0-252e-20563299bb18'
         #xen.update_disk(uuid,str(size))
         #xen.vm_update(uuid,fields)
-
+	#
 	print xen.hasTemplate("My Ubuntu Server Template")
