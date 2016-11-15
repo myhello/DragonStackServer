@@ -10,7 +10,8 @@ class DB_doing():
         port = 3306,
         user='root',
         passwd='xidian320',
-        db ='temp'
+        #db ='temp'
+        db = 'dscloud'
         )
         self.cur = self.conn.cursor()
 
@@ -30,7 +31,7 @@ class DB_doing():
         new_disk,belong = self.get_info(vm_info)
         sql2 = "update vm set cpu_cores="+"'"+str(vm_info[2])+"'"+",memory="+"'"+str(int(vm_info[3])*1024)+"'"+",disk="+"'"+str(new_disk)+"'"+" where uuid="+"'"+str(vm_info[1])+"'"+" and belong="+"'"+str(belong)+"'"
         self.cur.execute(str(sql2))
-	self.conn.commit()
+        self.conn.commit()
 
     def update_vm(self,vm_uuid,vm_label,vm_ip,belong,vm_id):
 		sql = "update vm set uuid="+"'"+str(vm_uuid)+"'"+",name_label="+"'"+str(vm_label)+"'"+",ip="+"'"+str(vm_ip)+"'"+",belong="+"'"+str(belong)+"'"+",state=1,power_state='running' where id="+"'"+str(vm_id)+"'"

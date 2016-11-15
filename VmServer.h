@@ -13,8 +13,6 @@
 #include <errno.h>
 #include <iostream>
 
-using namespace std;
-
 class Lock  {
     private:
         pthread_mutex_t m_lock;
@@ -26,41 +24,39 @@ class Lock  {
             pthread_mutex_unlock(&m_lock);
         }
 };
-//锁类，避免多线程操作虚拟机同步的错误
+//锁类，避免多线程操作虚拟机同步的错误//虚拟机所有接口
 
 class VmServer
 {
-private:
-	VmServer();
-	VmServer(const VmServer&);
-	VmServer& operator=(const VmServer&);
 
 public:
-	static VmServer *Instantialize();
-    static VmServer *pInstance;
-    static pthread_mutex_t  mutex;
+	VmServer(){};
+
+	VmServer(const VmServer&);
+	VmServer& operator=(const VmServer&);
+	/* data */
+
 
 	//创建虚拟机
-	void createVm(char *test);
+	virtual void createVm(char *test)=0;
 
 	//NAT端口映射服务
-	void natServer(char *data,DbServer* dbServer);
+	virtual void natServer(char *data,DbServer* dbServer)=0;
 
 	//回收虚拟机
-	void recyVm(char *data);
+	virtual void recyVm(char *data)=0;
 
 	//更新虚拟机配置
-	void updateVm(char *data);
+	virtual void updateVm(char *data)=0;
 
 	//关闭锁定虚拟机
-	void LockVM(char *data);
+	virtual void LockVM(char *data)=0;
 	
 	//解锁开启虚拟机
-	void UnlockVM(char *data);
+	virtual void UnlockVM(char *data)=0;
 
-	~VmServer();
-
-	/* data */
+	//多态析构
+	virtual ~VmServer(){};
 };
 
 #endif

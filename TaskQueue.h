@@ -7,6 +7,7 @@ using namespace std;
 struct Task{
 	/* data */
 	int t_id;
+        int t_region;	
 	char t_data[100];
 };
 

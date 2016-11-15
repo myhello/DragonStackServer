@@ -1,0 +1,212 @@
+#!/usr/bin/env python
+import os,libvirt,sys
+from xml.dom.minidom import parseString
+from SimpleXMLRPCServer import SimpleXMLRPCServer
+
+def canCreateVm(vcpus,memorys,disks,os_type):
+    #conn = libvirt.open('qemu:///system')
+    #hostmem = conn.getFreeMemory()
+    list_shell = 'virsh list --all | grep running | wc -l'
+    count = os.popen(list_shell).read()
+    mem_shell = " free -m | grep '-' | awk '{print $4}'"
+    m = os.popen(mem_shell).read()
+    print m
+    #print hostmem
+    #print int(memorys)*1024*1024
+    print int(count)
+    if int(m)>int(memorys) and int(count)<21:            
+        return True
+    else:
+        print  "can't create vm"
+        return False
+
+
+def createVM(vm_template,vm_label,vcpus,memorys,disks):
+    print vm_label,vm_template,vcpus,memorys,disks
+    vm_uuid = ""
+    vm_ip = ""
+    vnc_port = ""
+    '''
+    create a vm!
+    '''
+    #clone
+    vm_xml='/etc/libvirt/qemu/'+vm_label+'.xml'
+    if vm_template == "Windows-template":
+        shell='virsh dumpxml windows-template > ' +vm_xml
+        os.system(shell)
+        cp_shell='cp /var/lib/libvirt/images/windows-template.img /var/lib/libvirt/images/'+vm_label+'.img' 
+        os.system(cp_shell)
+    if vm_template == "Centos-template":
+        shell='virsh dumpxml centos-template > '+vm_xml
+        os.system(shell)
+        cp_shell='cp /var/lib/libvirt/images/centos-template.img /var/lib/libvirt/images/'+vm_label+'.img' 
+        os.system(cp_shell)
+    if vm_template == "Ubuntu-template":
+        shell='virsh dumpxml ubuntu-template > '+vm_xml
+        os.system(shell)
+        cp_shell='cp /var/lib/libvirt/images/ubuntu-template.img /var/lib/libvirt/images/'+vm_label+'.img' 
+        os.system(cp_shell)
+    print 'clone success'
+    
+    
+    vm_xml='/etc/libvirt/qemu/'+vm_label+'.xml'
+    #correct xml
+    xml = open (vm_xml,'r').read()
+    doc = parseString(xml)
+    
+    #change name
+    vname = doc.getElementsByTagName('name')[0]
+    vname.childNodes[0].data=vm_label
+
+    #change cpu
+    VCPU=doc.getElementsByTagName('vcpu')[0]
+    VCPU.childNodes[0].data =vcpus
+   
+    memorys = int(memorys)
+    memorys = memorys*1024
+    Memory=doc.getElementsByTagName('memory')[0]
+    Memory.childNodes[0].data = memorys
+    CM=doc.getElementsByTagName('currentMemory')[0]
+    CM.childNodes[0].data = memorys
+   
+    #change path
+    Disk_path=doc.getElementsByTagName('source')[0]
+    path1='/var/lib/libvirt/images/'+vm_label+'.img'
+    Disk_path.setAttribute('file',path1)
+  
+    #delete mac 
+    mac=doc.getElementsByTagName('mac')[0]
+    mac.removeAttribute('address')
+   
+    #delete uuid
+    uuid=doc.getElementsByTagName('uuid')[0]
+    uuid.removeChild(uuid.childNodes[0])
+    
+    vnctmp = open ('./vnc.txt','r').read()
+    if vnctmp == '\n':
+        vnc_port = '5900'
+    else:
+        vnctmp = vnctmp.split("|")
+        vnclen = len(vnctmp)
+        tmp = vnctmp[vnclen-1]
+        a = int(tmp)
+        vnc_port = str(a+1)
+    h = open('./vnc.txt','a+')
+    h.write('|'+vnc_port)
+    h.close()
+
+    vnc = doc.getElementsByTagName('graphics')[0]
+    vnc.setAttribute('port',vnc_port)
+    vnc.setAttribute('autoport','no')
+    vnc.setAttribute('passwd','111111')
+    f = open(vm_xml,'w')
+    doc.writexml(f)
+    f.close()
+
+    #change disk,GB
+
+    if vm_template == "Windows-template":
+        disks = int(disks)-50
+    if vm_template == "Centos-template":
+        disks = int(disks)-30
+    if vm_template == "Ubuntu-template":
+        disks = int(disks)-30
+    disk_shell='qemu-img resize '+path1+' +'+str(disks)+'G' 
+    os.system(disk_shell)
+    print'correct success'
+   
+    #define
+    df_shell='virsh define /etc/libvirt/qemu/'+vm_label+'.xml'
+    print df_shell
+    os.system(df_shell)
+    start_shell = 'virsh start '+vm_label
+    os.system(start_shell)
+
+    #get uuid
+    xml = open (vm_xml,'r').read()
+    doc = parseString(xml)
+    uuid = doc.getElementsByTagName('uuid')[0]
+    vm_uuid = uuid.childNodes[0].data   
+
+    #get ip
+    ip_shell = '/home/Dragonstack/DragonStackServer/VMServer/ip.sh '+ vm_label
+    p = os.popen(ip_shell).read()
+    while len(p)==0:
+        p=os.popen(ip_shell).read()
+    vm_ip = p[:-1]
+    
+    print 'vm_ip is'+vm_ip    
+    print 'vm_uuid is '+vm_uuid
+    print 'vnc_port is '+vnc_port
+    
+    return vm_uuid,vm_ip,vnc_port
+
+def correct(vm_label,vcpus,memorys,disks):
+    new_xml='/etc/libvirt/qemu/'+vm_label+'_new.xml'  
+    shell='virsh dumpxml '+vm_label+' > '+new_xml
+    os.system(shell)
+    print 'new xml created'
+    shell = 'virsh destroy '+vm_label 
+    os.system(shell)
+
+    shell_xml = 'virsh undefine '+vm_label
+    os.system(shell_xml)
+    print 'undefine success'
+    
+    mv_shell='mv /etc/libvirt/qemu/'+vm_label+'_new.xml /etc/libvirt/qemu/'+vm_label+'.xml' 
+    try:
+        os.system(mv_shell)
+        print mv_shell
+    except Exception:
+        print 'mv failure'
+    
+    vm_xml='/etc/libvirt/qemu/'+vm_label+'.xml'
+    #correct xml
+    xml = open (vm_xml,'r').read()
+    doc = parseString(xml)
+
+    #change cpu
+    VCPU=doc.getElementsByTagName('vcpu')[0]
+    VCPU.childNodes[0].data =vcpus
+   
+    #change Memory,GB
+    memorys = int(memorys)
+    memorys = memorys*1024*1024
+    Memory=doc.getElementsByTagName('memory')[0]
+    Memory.childNodes[0].data = memorys
+    CM=doc.getElementsByTagName('currentMemory')[0]
+    CM.childNodes[0].data = memorys
+   
+
+    f = open(vm_xml,'w')
+    doc.writexml(f)
+    f.close()
+   
+    path1='/var/lib/libvirt/images/'+vm_label+'.img'
+    #change disk,GB
+    disk_shell='qemu-img resize '+path1+' +'+str(disks)+'G' 
+    os.system(disk_shell)
+    print'correct success'
+   
+    #define
+    df_shell='virsh define /etc/libvirt/qemu/'+vm_label+'.xml'
+    print df_shell
+    os.system(df_shell)
+
+def delete(vm_label):
+    print 'delete begin'
+    print vm_label
+    shell = 'virsh destroy '+vm_label
+    os.system(shell)
+    shell_xml='virsh undefine '+vm_label
+    os.system(shell_xml)
+    delete_shell='rm /var/lib/libvirt/images/'+vm_label+'.img'
+    os.system(delete_shell)
+
+svr = SimpleXMLRPCServer(("",8888),allow_none=True)
+svr.register_function(canCreateVm)
+svr.register_function(createVM)
+svr.register_function(correct)
+svr.register_function(delete)
+
+svr.serve_forever()

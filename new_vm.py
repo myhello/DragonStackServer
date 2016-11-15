@@ -46,12 +46,12 @@ def canCreateVm(xenserver,cpu_cores,mem_size,new_disk,os_type):
 		vm_template = "My Windows Server Template"
 	if os_type==4:
 		vm_template = "My Ubuntu Server Template"
-	if os_type==6:
+	if os_type==5:
 		vm_template = "My Centos Template"
 	if xenserver.hasTemplate(vm_template):
 		live,free_memory,free_disk = xenserver.freeDeploy()
 		if live:
-			if free_memory>int(mem_size)*1024*1024 and free_disk>int(new_disk)*1024*1024*1024:
+			if free_memory-(4*1024*1024*1024)>int(mem_size)*1024*1024 and free_disk>int(new_disk)*1024*1024*1024:#make sure the server has 4GB memory!
 				return True
 			else:
 
@@ -95,14 +95,14 @@ def updateVmPassword(os_type,vm_ip,password):
 	if os_type==1 or os_type==4 :
 		shell = "/usr/tcl/bin/expect linux_password.exp %s %s %s %s" % (ubunbu_user,oldpassword,vm_ip,password)
 		os.system(shell)
-		os.system("rm ../.ssh/known_hosts")
+		os.system("rm ~/.ssh/known_hosts")
 	if os_type==2 or os_type==3 :
 		shell = "/usr/tcl/bin/expect windows_password.exp %s %s %s %s" % (windows_user,oldpassword,vm_ip,password)
 		os.system(shell)
-	if os_type==6:
+	if os_type==5:
 		shell = "/usr/tcl/bin/expect centos_password.exp %s %s %s %s" % (centos_user,oldpassword,vm_ip,password)
 		os.system(shell)
-		os.system("rm ../.ssh/known_hosts")
+		os.system("rm ~/.ssh/known_hosts")
 
 def sendMail(user_id,lport,gw_ip,dport,password):
 	db = DealDB.DB_doing()
@@ -117,13 +117,27 @@ def sendMail(user_id,lport,gw_ip,dport,password):
 		os_info="windows远程桌面工具"
 		os_name="Administrator"
 	ip_port = gw_ip+":"+dport
-	content = "尊敬的%s用户，你申请的虚拟机现已审核通过，请通过%s连接。\nIP:PORT为%s。\n用户名：%s        密码：%s\n如果使用有问题，请通过平台网址 http://222.25.188.1/cloud 登录查看相关说明！\n如有任何问题和意见，欢迎>    联系！谢谢！" % (user_name,os_info,ip_port,os_name,password)
+	content = "尊敬的%s用户，你申请的虚拟机现已审核通过，请通过%s连接。\nIP:PORT为%s。\n用户名：%s        密码：%s\n如果使用有问题，请通过平台网址 http://222.25.188.1/cloudv2 登录查看相关说明！\n如有任何问题和意见，欢迎>    联系！谢谢！" % (user_name,os_info,ip_port,os_name,password)
 	message = "echo \"%s\" | mailx -v -s \"%s\" %s" % (content,title,email)
 	os.system(message)
 
 def webProxy(vm_ip):
 	proxy = "sudo python /var/www/html/noVNC/webproxy.py %s" % vm_ip
 	os.system(proxy)	
+
+#判断虚拟机远程端口是否打开
+def checkRemotePort(vm_ip,lport):
+	sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sk.settimeout(3)
+	#print sk
+	try:
+		sk.connect((vm_ip,lport))
+		print 'Server port '+ str(lport)+' OK!'
+		sk.close()
+		return True
+	except Exception,e:
+		#print str(e)
+		return False
 
 #将需要发送的数据封装为json
 def dataToJson(ip,vm_uuid,vm_lable,lport,dport,serverid):
@@ -178,7 +192,7 @@ def new_vm(region,os_type,cpu_cores,mem_size,new_disk,password,vm_id,nid,user_id
 		vm_lable = "ubuntu-server-"+str(vm_id)
 		vm_template = "My Ubuntu Server Template"
 		lport = 22
-	if os_type==6:
+	if os_type==5:
 		vm_lable = "centos"+str(vm_id)
 		vm_template = "My Centos Template"
 		lport = 22
@@ -198,6 +212,9 @@ def new_vm(region,os_type,cpu_cores,mem_size,new_disk,password,vm_id,nid,user_id
 	print "vm create success！Reported IP: ", vm_ip
 
 	dport = NAT(xenserver.read_ip_address(vm_ref),lport)
+
+	while checkRemotePort(vm_ip,lport)==False:
+		pass
  
     #改密码
     	updateVmPassword(os_type,xenserver.read_ip_address(vm_ref),password)

@@ -10,7 +10,8 @@ class DB_doing():
         port = 3306,
         user='root',
         passwd='xidian320',
-        db ='temp'
+        #db ='temp'
+        db = 'dscloud'
         )
         self.cur = self.conn.cursor()
 

@@ -46,7 +46,7 @@ else
     for((i=$start;i<60000;i++))
     do
         dport=$i
-        echo $dport
+        #echo $dport
    		isExitPort=`sudo sudo iptables -nL -t nat | awk '{print $7}' | grep -n $dport | wc -l`
 	    if [ $isExitPort -ge 1 ]
         then 

@@ -16,7 +16,7 @@ class DB_doing():
         port = 3306,
         user='root',
         passwd='xidian320',
-        db ='temp'
+        db ='dscloud'
         )
         self.cur = self.conn.cursor()
 
@@ -47,7 +47,7 @@ def doTask(task):
     try:
         db = DB_doing() 
         db.delete_nat(vm_info[1])    #vm_list中的id
-        db.delete_vm(vm_info[2])     #vm uuid
+        #db.delete_vm(vm_info[2])     #vm uuid
 
         delete_nat = 'sudo iptables -t nat -D PREROUTING -i eth1 -p tcp --dport %s -j DNAT --to-destination %s:%s' % (vm_info[5],vm_info[3],vm_info[4])  
         #print delete_nat

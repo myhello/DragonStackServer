@@ -15,7 +15,7 @@ class DB_doing():
         port = 3306,
         user='root',
         passwd='xidian320',
-        db ='temp'
+        db ='dscloud'
         )
         self.cur = self.conn.cursor()
 
@@ -37,6 +37,8 @@ class DB_doing():
 
 def doTask(task):
     vm_info = task.split("|")
+ 
+    print vm_info
 
     xenserver_ip = vm_info[0]
         

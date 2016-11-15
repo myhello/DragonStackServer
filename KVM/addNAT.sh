@@ -8,7 +8,7 @@ fi
 ip=$1
 port=$2
 
-start=50000
+start=20000
 flag=${ip}:${port}
 
 ddport=
@@ -41,24 +41,24 @@ fi
 if [ $condition -eq 1 ]
 then 
 	echo 'the port has already been NAT'
-    eval echo $ddport > dport.conf
+    eval echo $ddport > $flag
 else
-    for((i=$start;i<60000;i++))
+    for((i=$start;i<50000;i++))
     do
         dport=$i
-        echo $dport
+        #echo $dport
    		isExitPort=`sudo sudo iptables -nL -t nat | awk '{print $7}' | grep -n $dport | wc -l`
-	    if [ $isExitPort -ge 1 ]
+		if [ $isExitPort -ge 1 ]
         then 
         	continue
         else
         	eval sudo iptables -t nat -A PREROUTING -i eth1 -p tcp --dport $dport -j DNAT --to-destination $ip:$port
+            eval echo $dport > KVM/$flag
             break
         fi
     done
     sudo service iptables save
-    eval echo $i > dport.conf
-    echo "NAT port $i success!"
+	echo "NAT port $i success!"
 fi
 
 

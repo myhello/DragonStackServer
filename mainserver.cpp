@@ -5,6 +5,8 @@
 //mainserver.cpp
 #include "TcpServer.h"
 #include "VmServer.h"
+#include "KvmServer.h"
+#include "XenServer.h"
 #include "DbServer.h"
 #include "TaskQueue.h"
 #include "config.h"
@@ -13,7 +15,7 @@
 //#define  SERVER_PORT 10000 
 #define  DB_USER "root"
 #define  DB_PASSWORD "xidian320"
-#define  DATABASE "temp"
+#define  DATABASE "dscloud"
 
 pthread_t taskthread;  
 
@@ -25,7 +27,7 @@ config conf;
 
 void* ProcessRequest(void*)
 {
-  VmServer *vmserver = VmServer::Instantialize();
+  VmServer *vmserver = NULL;
 
   DbServer dbserver(conf.getDBServerIp().c_str(),DB_USER,DB_PASSWORD,DATABASE);
   
@@ -53,6 +55,13 @@ void* ProcessRequest(void*)
       lock.~CMyLock();
 
   		//判断task->t_id，执行不同的虚拟机服务
+      if(task1->t_region==0){
+          vmserver = KvmServer::Instantialize();
+          //vmserver = new KvmServer();
+      }else{
+          vmserver = XenServer::Instantialize();
+          //vmserver = new XenServer();
+      }
   		switch( VmService(task1->t_id) ){
 		    case CREATE_VM:
 			    vmserver->createVm(task1->t_data);
@@ -68,8 +77,10 @@ void* ProcessRequest(void*)
 		        break;
 			case LOCK_USER:
 				vmserver->LockVM(task1->t_data);
+				break;
 			case UNLOCK_USER:
 				vmserver->UnlockVM(task1->t_data);
+				break;
 		    default:
 		        break;
   		}
@@ -78,6 +89,7 @@ void* ProcessRequest(void*)
 	  	free(task1);
 		//应该考虑一下悬垂指针啊
 		task1=NULL;
+
 	  }
   }
   
